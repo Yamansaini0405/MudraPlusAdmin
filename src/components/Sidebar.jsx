@@ -13,7 +13,8 @@ import {
   ShieldAlert,
   FileCheck,
   Circle,
-  LayoutList
+  LayoutList,
+  User
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from "../assets/Logo2.png";
@@ -37,6 +38,8 @@ export default function Sidebar() {
       path: '/loans',
       submenu: [
         { label: 'All Loans', path: '/loans', icon: LayoutList },
+        { label: 'Requested Loans', path: '/requested-loans', icon: FileText },
+        { label: 'Active Loans', path: '/active-loans', icon: FileCheck },
       ],
       allowedRoles: ['admin', 'agent']
     },
@@ -55,6 +58,12 @@ export default function Sidebar() {
       label: 'Admin & Agents',
       icon: LayoutList,
       path: '/admins',
+      allowedRoles: ['admin']
+    },
+    {
+      label: 'User Assignments',
+      icon: User,
+      path: '/assignments',
       allowedRoles: ['admin']
     },
     

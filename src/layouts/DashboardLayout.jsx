@@ -14,6 +14,9 @@ import LoanDetail from '@/pages/LoanDetail';
 import BlockedUsers from '@/pages/BlockedUsers';
 import KYCUsers from '@/pages/KYCUsers';
 import AdminManagement from '@/pages/AdminManagement';
+import AssignAgent from '@/pages/AssignAgent';
+import RequestedLoan from '@/pages/RequestedLoan';
+import ActiveLoan from '@/pages/ActiveLoan';
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -41,7 +44,10 @@ export default function DashboardLayout() {
               <Route path="/admins" element={<AdminManagement />} />
               {/* <Route path="/admins/create" element={<CreateAdmin />} /> */}
               <Route path="/loans" element={<Loans />} />
+              <Route path="/requested-loans" element={<RequestedLoan />} />
+              <Route path="/active-loans" element={<ActiveLoan/>} />
               <Route path="/loan/:loanId" element={<LoanDetail />} />
+              <Route path="/assignments" element={<AssignAgent />} />
               {/* Additional routes will be added here */}
               <Route path="*" element={<Dashboard />} />
             </Routes>

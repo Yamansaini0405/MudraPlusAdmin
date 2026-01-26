@@ -409,7 +409,10 @@ export default function UserDetail() {
                 <h3 className="font-semibold text-gray-900">{loan.loanNumber}</h3>
                 <p className="text-xs text-gray-600">ID: {loan.id}</p>
               </div>
-              <StatusCard label="" value={loan.status} type={loan.status === 'closed' ? 'success' : loan.status === 'requested' ? 'warning' : 'info'} inline={true} />
+              <div className='flex items-center justify-center gap-4'>
+                <StatusCard label="" value={loan.status} type={loan.status === 'closed' ? 'success' : loan.status === 'requested' ? 'warning' : 'info'} inline={true} />
+                <button className='border border-[#1a3a6b] text-white text-sm px-2 py-0.5  rounded bg-[#1a3a6b] hover:bg-[#1a3a6b]/95 hover:text-white transition-colors cursor-pointer' onClick={() => navigate(`/loan/${loan.id}`)}>View</button>
+              </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <InfoCard label="Requested Amount" value={formatCurrency(loan.requestedAmount)} />
@@ -537,165 +540,164 @@ export default function UserDetail() {
   };
 
   // Agents Tab
-const renderAgents = () => {
-  return (
-    <div className="space-y-8">
-      {/* ===== Assigned Agents Table ===== */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-semibold text-[#1a3a6b] uppercase tracking-widest">
-            Currently Assigned Agents
-          </h3>
-          
-        </div>
+  const renderAgents = () => {
+    return (
+      <div className="space-y-8">
+        {/* ===== Assigned Agents Table ===== */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-semibold text-[#1a3a6b] uppercase tracking-widest">
+              Currently Assigned Agents
+            </h3>
 
-        {!userData?.agentUsers || userData.agentUsers.length === 0 ? (
-          <div className="p-8 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-center">
-            <p className="text-slate-400 text-sm font-medium">No agents assigned to this user.</p>
           </div>
-        ) : (
-          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-[#1a3a6b] border-b border-slate-100" >
-                  <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Agent Info</th>
-                  <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Email</th>
-                  <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Phone</th>
-            
-                  <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {userData.agentUsers.map((assignment) => {
-                  const agent = assignment.agent;
-                  return (
-                    <tr key={assignment.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-[#1a3a6b]/10 text-[#1a3a6b] flex items-center justify-center text-xs font-bold uppercase">
-                            {agent?.name?.charAt(0)}
+
+          {!userData?.agentUsers || userData.agentUsers.length === 0 ? (
+            <div className="p-8 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-center">
+              <p className="text-slate-400 text-sm font-medium">No agents assigned to this user.</p>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-[#1a3a6b] border-b border-slate-100" >
+                    <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Agent Info</th>
+                    <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Email</th>
+                    <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Phone</th>
+
+                    <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {userData.agentUsers.map((assignment) => {
+                    const agent = assignment.agent;
+                    return (
+                      <tr key={assignment.id} className="hover:bg-slate-50/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-[#1a3a6b]/10 text-[#1a3a6b] flex items-center justify-center text-xs font-bold uppercase">
+                              {agent?.name?.charAt(0)}
+                            </div>
+                            <span className="text-md font-semibold text-slate-800">{agent?.name}</span>
                           </div>
-                          <span className="text-md font-semibold text-slate-800">{agent?.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium text-slate-900">{agent?.email}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-slate-900 uppercase">{agent?.phone}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <button
-                          onClick={() => handleAgentAction(assignment.agent.id, false)}
-                          disabled={assignmentLoading === assignment.agent.id}
-                          className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-semibold border border-red-100"
-                        >
-                          {assignmentLoading === assignment.agentId ? (
-                            <Loader size={14} className="animate-spin" />
-                          ) : (
-                            // <Trash2 size={14} />
-                            ""
-                          )}
-                          Unassign
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* ===== Assign New Agent Search Section ===== */}
-      <div className="pt-8 border-t border-slate-100 space-y-4">
-        <h3 className="text-sm font-semibold text-[#1a3a6b] uppercase tracking-widest">
-          Assign New Agent
-        </h3>
-
-        {/* Search Input */}
-        <div className="relative group">
-          <Search
-            size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1a3a6b] transition-colors"
-          />
-          <input
-            type="text"
-            placeholder="Search by name, email or phone..."
-            value={agentSearch}
-            onChange={(e) => setAgentSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#1a3a6b]/20 transition-all shadow-sm"
-          />
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-slate-900">{agent?.email}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-semibold text-slate-900 uppercase">{agent?.phone}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <button
+                            onClick={() => handleAgentAction(assignment.agent.id, false)}
+                            disabled={assignmentLoading === assignment.agent.id}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-semibold border border-red-100"
+                          >
+                            {assignmentLoading === assignment.agentId ? (
+                              <Loader size={14} className="animate-spin" />
+                            ) : (
+                              // <Trash2 size={14} />
+                              ""
+                            )}
+                            Unassign
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
-        {/* Search Results Dropdown */}
-        {agentSearch && (
-          <div className="bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-            {isSearching ? (
-              <div className="p-12 text-center">
-                <Loader className="animate-spin inline text-[#1a3a6b]" size={24} />
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-4">Searching Agents...</p>
-              </div>
-            ) : availableAgents.length === 0 ? (
-              <div className="p-10 text-center">
-                <p className="text-slate-400 text-sm font-medium italic">No agents found for "{agentSearch}"</p>
-              </div>
-            ) : (
-              <div className="divide-y divide-slate-100 max-h-[350px] overflow-y-auto custom-scrollbar">
-                {availableAgents.map((agent) => {
-                  const alreadyAssigned = userData.agentUsers?.some((a) => a.agentId === agent.id);
+        {/* ===== Assign New Agent Search Section ===== */}
+        <div className="pt-8 border-t border-slate-100 space-y-4">
+          <h3 className="text-sm font-semibold text-[#1a3a6b] uppercase tracking-widest">
+            Assign New Agent
+          </h3>
 
-                  return (
-                    <div
-                      key={agent.id}
-                      className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors group/item"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold group-hover/item:bg-[#1a3a6b]/10 group-hover/item:text-[#1a3a6b] transition-colors">
-                          {agent.name.charAt(0)}
-                        </div>
-                        <div className="space-y-0.5">
-                          <p className="text-sm font-bold text-slate-800">{agent.name}</p>
-                          <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tight">
-                            {agent.email} • {agent.phone}
-                          </p>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => handleAgentAction(agent.id, true)}
-                        disabled={assignmentLoading === agent.id || alreadyAssigned}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-                          alreadyAssigned
-                            ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                            : 'bg-[#1a3a6b] text-white hover:bg-[#122a4f] shadow-md shadow-[#1a3a6b]/10'
-                        }`}
-                      >
-                        {assignmentLoading === agent.id ? (
-                          <Loader size={14} className="animate-spin" />
-                        ) : alreadyAssigned ? (
-                          <CheckCircle size={14} />
-                        ) : (
-                          <Plus size={14} />
-                        )}
-                        {alreadyAssigned ? 'Already Assigned' : 'Assign to User'}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+          {/* Search Input */}
+          <div className="relative group">
+            <Search
+              size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#1a3a6b] transition-colors"
+            />
+            <input
+              type="text"
+              placeholder="Search by name, email or phone..."
+              value={agentSearch}
+              onChange={(e) => setAgentSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#1a3a6b]/20 transition-all shadow-sm"
+            />
           </div>
-        )}
+
+          {/* Search Results Dropdown */}
+          {agentSearch && (
+            <div className="bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+              {isSearching ? (
+                <div className="p-12 text-center">
+                  <Loader className="animate-spin inline text-[#1a3a6b]" size={24} />
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-4">Searching Agents...</p>
+                </div>
+              ) : availableAgents.length === 0 ? (
+                <div className="p-10 text-center">
+                  <p className="text-slate-400 text-sm font-medium italic">No agents found for "{agentSearch}"</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-slate-100 max-h-[350px] overflow-y-auto custom-scrollbar">
+                  {availableAgents.map((agent) => {
+                    const alreadyAssigned = userData.agentUsers?.some((a) => a.agentId === agent.id);
+
+                    return (
+                      <div
+                        key={agent.id}
+                        className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors group/item"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold group-hover/item:bg-[#1a3a6b]/10 group-hover/item:text-[#1a3a6b] transition-colors">
+                            {agent.name.charAt(0)}
+                          </div>
+                          <div className="space-y-0.5">
+                            <p className="text-sm font-bold text-slate-800">{agent.name}</p>
+                            <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tight">
+                              {agent.email} • {agent.phone}
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => handleAgentAction(agent.id, true)}
+                          disabled={assignmentLoading === agent.id || alreadyAssigned}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${alreadyAssigned
+                              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                              : 'bg-[#1a3a6b] text-white hover:bg-[#122a4f] shadow-md shadow-[#1a3a6b]/10'
+                            }`}
+                        >
+                          {assignmentLoading === agent.id ? (
+                            <Loader size={14} className="animate-spin" />
+                          ) : alreadyAssigned ? (
+                            <CheckCircle size={14} />
+                          ) : (
+                            <Plus size={14} />
+                          )}
+                          {alreadyAssigned ? 'Already Assigned' : 'Assign to User'}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 
   // Follow-ups Tab
@@ -808,7 +810,7 @@ const renderAgents = () => {
     };
 
     const content = (
-      <span className={`px-2 py-1 text-xs font-semibold rounded capitalize ${getColor(type)}`}>
+      <span className={`px-2 py-1 text-sm font-semibold rounded capitalize ${getColor(type)}`}>
         {value}
       </span>
     );

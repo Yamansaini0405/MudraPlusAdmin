@@ -91,4 +91,49 @@ export const adminApi = {
       throw error;
     }
   },
+  // Get all agents
+  getAllAgents: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/admin/getalladmins?type=agent`, {
+        method: 'GET',
+        headers: getHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch agents: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching agents:', error);
+      throw error;
+    }
+  },
+
+  // Assign multiple users to an agent
+  assignUsersToAgent: async (agentId, userIds) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/admin/assign-multiple-users`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          agentId,
+          userIds,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Failed to assign users: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error assigning users to agent:', error);
+      throw error;
+    }
+  },
 };
+
+
+

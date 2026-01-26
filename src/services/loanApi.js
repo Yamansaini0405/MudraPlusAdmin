@@ -27,6 +27,40 @@ export const loanApi = {
       throw error;
     }
   },
+  getPendingLoans: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/admin/loans?status=requested`, {
+        method: 'GET',
+        headers: getHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch loans: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching loans:', error);
+      throw error;
+    }
+  },
+  getActiveLoans: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/admin/loans?status=active`, {
+        method: 'GET',
+        headers: getHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch loans: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching loans:', error);
+      throw error;
+    }
+  },
 
   // Get loan details by ID
   getLoanDetails: async (loanId) => {
