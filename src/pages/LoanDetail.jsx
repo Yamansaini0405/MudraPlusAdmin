@@ -373,7 +373,6 @@ export default function LoanDetail() {
         whatsapp: { color: 'emerald', icon: MessageSquare },
     };
 
-    // Render Loan Details Tab
     const renderLoanDetails = () => {
         if (!loan) return null;
 
@@ -902,7 +901,7 @@ export default function LoanDetail() {
                                         <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Processing Fee %</p>
                                         <span className="text-lg font-semibold text-gray-900 mt-1 block">{loan.pfp}%</span>
                                     </div>
-                                    <div>   
+                                    <div>
                                         <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Processing Amount</p>
                                         <span className="text-lg font-semibold text-red-600 mt-1 block">{formatCurrency(loan.pfp * reviewData.principalAmount / 100)}</span>
                                     </div>
