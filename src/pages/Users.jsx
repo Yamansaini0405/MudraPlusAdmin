@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Plus, Loader, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Dropdown from '@/components/ui/dropdown';
+import Dropdown from '@/components/ui/Dropdown';
 import { userApi } from '@/services/userApi';
 
 export default function Users() {

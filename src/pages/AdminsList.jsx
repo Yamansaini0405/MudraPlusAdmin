@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Loader, Trash2, Shield, User } from 'lucide-react';
-import Dropdown from '@/components/ui/dropdown';
+import Dropdown from '@/components/ui/Dropdown';
 import { adminApi } from '@/services/adminApi';
 
 export default function AdminsList() {

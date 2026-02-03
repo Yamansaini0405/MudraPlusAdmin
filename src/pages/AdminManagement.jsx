@@ -6,7 +6,7 @@ import {
   Plus, Search, Loader, Shield, User, 
   UserPlus, Lock, X, RefreshCw, Trash2, MoreVertical
 } from 'lucide-react';
-import Dropdown from '@/components/ui/dropdown';
+import Dropdown from '@/components/ui/Dropdown';
 import { adminApi } from '@/services/adminApi';
 
 export default function AdminManagement() {
