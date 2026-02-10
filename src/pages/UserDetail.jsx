@@ -35,6 +35,7 @@ export default function UserDetail() {
     { id: 'activity', label: 'Activity', icon: ClipboardList },
     { id: 'transactions', label: 'Transactions', icon: History },
     { id: 'agents', label: 'Agents', icon: Users },
+    { id: 'contacts', label: 'Contact List', icon: Phone },
     { id: 'followups', label: 'Follow-ups', icon: Clock },
   ];
 
@@ -131,6 +132,9 @@ export default function UserDetail() {
           break;
         case 'followups':
           data = await userApi.getUserFollowUps(userId);
+          break;
+        case 'contacts':
+          data = await userApi.getUserContactsList(userId);
           break;
         default:
           data = await userApi.getUserBasicInfo(userId);
@@ -699,6 +703,55 @@ export default function UserDetail() {
     );
   };
 
+  // Contact List Tab
+  const renderContactsList = () => {
+    if (!userData?.contactslist?.contactList || userData.contactslist.contactList.length === 0) {
+      return <EmptyState message="No contacts found" />;
+    }
+
+    return (
+      <div className="space-y-4">
+        {userData.contactslist.contactList.map((contact, index) => (
+          <div key={index} className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-3 flex-1">
+                <div className="w-10 h-10 rounded-full bg-[#1a3a6b]/10 text-[#1a3a6b] flex items-center justify-center font-bold text-sm">
+                  {(contact.displayName || 'C').charAt(0).toUpperCase()}
+                </div>
+                <h3 className="font-semibold text-gray-900 text-lg">{contact.displayName || 'Unknown Contact'}</h3>
+              </div>
+            </div>
+
+            {contact.phoneNumbers && contact.phoneNumbers.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Phone Numbers</p>
+                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                  {contact.phoneNumbers.map((phone, phoneIndex) => (
+                    <div key={phoneIndex} className="flex items-center justify-between">
+                      <a
+                        href={`tel:${phone.replace(/\\s+/g, '')}`}
+                        className="text-sm font-medium text-[#1a3a6b] hover:text-[#1a3a6b]/80 flex items-center gap-2 group"
+                      >
+                        <Phone size={16} className="group-hover:scale-110 transition-transform" />
+                        {phone}
+                      </a>
+                      <button
+                        onClick={() => navigator.clipboard.writeText(phone.replace(/\\s+/g, ''))}
+                        className="text-xs px-2 py-1 bg-white border border-gray-300 rounded text-gray-700 hover:bg-gray-100 transition-colors"
+                        title="Copy to clipboard"
+                      >
+                        Copy
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   // Follow-ups Tab
   const renderFollowUps = () => {
@@ -888,6 +941,8 @@ export default function UserDetail() {
         return renderTransactions();
       case 'agents':
         return renderAgents();
+      case 'contacts':
+        return renderContactsList();
       case 'followups':
         return renderFollowUps();
       default:
@@ -897,8 +952,8 @@ export default function UserDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header - Styled exactly like LoanDetail */}
-      <div className="bg-white border-b border-gray-200 p-2 rounded-2xl">
+      {/* Desktop Tabs Navigation */}
+      <div className="hidden md:block bg-white border-b border-gray-200 p-2 rounded-2xl">
         <div className="flex gap-2 overflow-x-auto pb-4 -mb-4 no-scrollbar">
 
           {tabs.map((tab) => {
@@ -924,8 +979,23 @@ export default function UserDetail() {
         </div>
       </div>
 
+      {/* Mobile Dropdown Navigation */}
+      <div className="md:hidden bg-white border-b border-gray-200 p-3">
+        <select
+          value={activeTab}
+          onChange={(e) => setActiveTab(e.target.value)}
+          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1a3a6b] font-medium text-gray-900 bg-white"
+        >
+          {tabs.map((tab) => (
+            <option key={tab.id} value={tab.id}>
+              {tab.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* Content - Maintaining consistent padding */}
-      <div className="py-6">
+      <div className="py-6 px-3 md:px-0">
         {error && (
           <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
             {error}
