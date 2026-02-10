@@ -363,12 +363,12 @@ export default function UserDetail() {
             <div key={doc.id} className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
               <div className="flex items-start justify-between mb-3">
                 <h4 className="font-semibold text-gray-900 capitalize text-sm">{formatDocumentType(doc.documentType)}</h4>
-                <button
+                {/* <button
                   onClick={() => setShowDocument({ ...showDocument, [doc.id]: !showDocument[doc.id] })}
                   className="text-gray-500 hover:text-gray-700"
                 >
                   {showDocument[doc.id] ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
+                </button> */}
               </div>
               {showDocument[doc.id] && (
                 <div className="mb-3 bg-gray-50 rounded p-2 max-h-40 overflow-hidden">
@@ -1025,7 +1025,7 @@ export default function UserDetail() {
   };
 
   const getImageUrl = (documentUrl) => {
-    const baseUrl = 'https://2q766kvz-3000.inc1.devtunnels.ms/';
+    const baseUrl = 'https://api.mudraplus.com/';
     return `${baseUrl}${documentUrl}`;
   };
 

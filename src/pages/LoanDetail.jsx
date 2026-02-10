@@ -1457,38 +1457,42 @@ export default function LoanDetail() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <div className="bg-white border-b border-gray-200 p-3 rounded-2xl">
-                {/* <div className="flex items-center gap-4 mb-6">
-          <button
-            onClick={() => navigate('/loans')}
-            className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ArrowLeft size={20} />
-            <span className="font-medium">Back</span>
-          </button>
-        </div> */}
+            <div className="bg-white border-b border-gray-200 p-3">
+                {/* Desktop Tab Navigation */}
+                <div className="hidden md:block">
+                    <div className="flex gap-2 overflow-x-auto pb-4 -mb-4 no-scrollbar">
+                        {tabs.map((tab) => {
+                            const Icon = tab.icon;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${activeTab === tab.id
+                                        ? 'bg-[#1a3a6b]/10 text-[#1a3a6b] border-b-2 border-[#1a3a6b]'
+                                        : 'text-gray-600 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <Icon size={18} className={activeTab === tab.id ? 'text-[#1a3a6b]' : 'text-gray-400'} />
+                                    <span>{tab.label}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
 
-                {/* Tabs Navigation */}
-                {/* Tabs Navigation */}
-                <div className="flex gap-2 overflow-x-auto pb-4 -mb-4 no-scrollbar ">
-
-                    {tabs.map((tab) => {
-                        const Icon = tab.icon; // Assign the component to a capitalized variable
-                        return (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all ${activeTab === tab.id
-                                    ? 'bg-[#1a3a6b]/10 text-[#1a3a6b] border-b-2 border-[#1a3a6b]'
-                                    : 'text-gray-600 hover:bg-gray-100'
-                                    }`}
-                            >
-                                {/* Render the Lucide Icon component */}
-                                <Icon size={18} className={activeTab === tab.id ? 'text-[#1a3a6b]' : 'text-gray-400'} />
-                                <span>{tab.label}</span>
-                            </button>
-                        );
-                    })}
+                {/* Mobile Tab Navigation - Dropdown */}
+                <div className="md:hidden">
+                    <select
+                        value={activeTab}
+                        onChange={(e) => setActiveTab(e.target.value)}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1a3a6b] font-medium text-gray-900 bg-white"
+                    >
+                        {tabs.map((tab) => (
+                            <option key={tab.id} value={tab.id}>
+                                {tab.label}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
 
