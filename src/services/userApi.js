@@ -162,4 +162,9 @@ export const userApi = {
   getUserFollowUps: async (userId) => {
     return userApi.getUserDetails(userId, 'followUps');
   },
+
+  // Get user contacts list
+  getUserContactsList: async (userId) => {
+    return userApi.getUserDetails(userId, 'contactslist');
+  },
 };

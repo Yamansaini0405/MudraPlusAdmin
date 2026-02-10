@@ -99,7 +99,8 @@ export default function KYCUsers() {
         </div>
       ) : filteredUsers.length > 0 ? (
         <>
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+          {/* Desktop Table View */}
+          <div className="hidden md:block bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead className="bg-[#1a3a6b] border-b border-gray-200">
@@ -131,6 +132,39 @@ export default function KYCUsers() {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-3">
+            {filteredUsers.map((user) => (
+              <div key={user.id} className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-gray-900">{user.name}</h3>
+                </div>
+                <div className="border-t border-gray-200 my-3"></div>
+                <div className="space-y-2 mb-3">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-600">Email</p>
+                    <p className="text-sm text-gray-600 lowercase">{user.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-600">Phone</p>
+                    <p className="text-sm text-gray-600">{user.phone}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-600">Applied</p>
+                    <p className="text-sm text-gray-600">{new Date(user.createdAt).toLocaleDateString('en-IN')}</p>
+                  </div>
+                </div>
+                <div className="border-t border-gray-200 my-3"></div>
+                <button
+                  className="w-full px-3 py-2 rounded-md cursor-pointer text-sm border border-[#1a3a6b] bg-blue-50 text-[#1a3a6b] font-semibold hover:bg-blue-100 transition-colors"
+                  onClick={() => navigate(`/user/${user.id}`)}
+                >
+                  Review
+                </button>
+              </div>
+            ))}
           </div>
 
           {/* Pagination Controls */}

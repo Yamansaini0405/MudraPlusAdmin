@@ -112,7 +112,6 @@ export default function LoanDetail() {
         }));
     }, [reviewData.principalAmount, reviewData.intrestRate, reviewData.tenure, reviewData.intrestType]);
 
-    // 1. Fetch currently assigned agents when 'agents' tab is active
     useEffect(() => {
         if (activeTab === 'agents' && loan?.userId) {
             fetchAssignedAgents();
@@ -629,7 +628,8 @@ export default function LoanDetail() {
                     <h2 className="text-lg font-semibold text-white">Transaction History</h2>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead className="bg-slate-50 border-b border-slate-200">
                             <tr>
@@ -708,6 +708,67 @@ export default function LoanDetail() {
                             })}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-3 p-4">
+                    {loan.transactions.map((transaction) => {
+                        const isDisbursement = transaction.transactionType === 'disbursement';
+
+                        return (
+                            <div key={transaction.id} className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                {/* Type and Amount */}
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-semibold border ${isDisbursement
+                                        ? 'bg-blue-50 text-blue-700 border-blue-100'
+                                        : 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                        }`}>
+                                        {isDisbursement ? (
+                                            <ArrowUpRight size={14} strokeWidth={3} />
+                                        ) : (
+                                            <ArrowDownLeft size={14} strokeWidth={3} />
+                                        )}
+                                        <span className='first-letter:uppercase'>{transaction.transactionType}</span>
+                                    </div>
+                                    <span className={`text-sm font-bold ${isDisbursement ? 'text-blue-700' : 'text-emerald-700'
+                                        }`}>
+                                        {formatCurrency(transaction.amount)}
+                                    </span>
+                                </div>
+
+                                {/* Divider */}
+                                <div className="border-t border-slate-200 my-3"></div>
+
+                                {/* Razorpay Details */}
+                                <div className="space-y-2 mb-3">
+                                    {transaction.rpzOrderId && (
+                                        <div className="text-xs">
+                                            <span className="font-semibold text-slate-600">Order:</span>
+                                            <p className="font-mono text-slate-700 mt-0.5 break-all">{transaction.rpzOrderId}</p>
+                                        </div>
+                                    )}
+                                    {transaction.rpzPaymentId && (
+                                        <div className="text-xs">
+                                            <span className="font-semibold text-slate-600">Payment:</span>
+                                            <p className="font-mono text-slate-700 mt-0.5 break-all">{transaction.rpzPaymentId}</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Date */}
+                                <div className="text-xs text-slate-500 font-medium">
+                                    {new Date(transaction.createdAt).toLocaleString('en-IN', {
+                                        day: '2-digit',
+                                        month: 'short',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: true
+                                    })}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
 
                 {/* Table Footer Summary */}
@@ -1191,59 +1252,109 @@ export default function LoanDetail() {
                             <p className="text-slate-400 text-sm font-medium">No agents assigned to this user.</p>
                         </div>
                     ) : (
-                        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-                            <table className="w-full text-left border-collapse">
-                                <thead>
-                                    <tr className="bg-[#1a3a6b] border-b border-slate-100" >
-                                        <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Agent Info</th>
-                                        <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Email</th>
-                                        <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Phone</th>
+                        <>
+                            {/* Desktop Table View */}
+                            <div className="hidden md:block bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-[#1a3a6b] border-b border-slate-100" >
+                                            <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Agent Info</th>
+                                            <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Email</th>
+                                            <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Phone</th>
 
-                                        <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100">
-                                    {assignedAgents.map((item) => (
-                                        // 
-                                        <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-full bg-[#1a3a6b]/10 text-[#1a3a6b] flex items-center justify-center text-xs font-bold ">
-                                                        {item.agent?.name?.charAt(0)}
-                                                    </div>
-                                                    <span className="text-md font-semibold text-slate-800 first-letter:uppercase">{item.agent?.name}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex flex-col">
-                                                    <span className="text-sm font-medium text-slate-900">{item.agent?.email}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex flex-col">
-                                                    <span className="text-sm font-semibold text-slate-900 uppercase">{item.agent?.phone}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <button
-                                                    onClick={() => handleAgentAction(item.agent.id, false)}
-                                                    disabled={assignmentLoading === item.agent.id}
-                                                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-semibold border border-red-100"
-                                                >
-                                                    {assignmentLoading === item.agent.id ? (
-                                                        <Loader size={14} className="animate-spin" />
-                                                    ) : (
-                                                        // <Trash2 size={14} />
-                                                        ""
-                                                    )}
-                                                    Unassign
-                                                </button>
-                                            </td>
+                                            <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest text-center">Action</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100">
+                                        {assignedAgents.map((item) => (
+                                            // 
+                                            <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-8 h-8 rounded-full bg-[#1a3a6b]/10 text-[#1a3a6b] flex items-center justify-center text-xs font-bold ">
+                                                            {item.agent?.name?.charAt(0)}
+                                                        </div>
+                                                        <span className="text-md font-semibold text-slate-800 first-letter:uppercase">{item.agent?.name}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-medium text-slate-900">{item.agent?.email}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-sm font-semibold text-slate-900 uppercase">{item.agent?.phone}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    <button
+                                                        onClick={() => handleAgentAction(item.agent.id, false)}
+                                                        disabled={assignmentLoading === item.agent.id}
+                                                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-semibold border border-red-100"
+                                                    >
+                                                        {assignmentLoading === item.agent.id ? (
+                                                            <Loader size={14} className="animate-spin" />
+                                                        ) : (
+                                                            // <Trash2 size={14} />
+                                                            ""
+                                                        )}
+                                                        Unassign
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Mobile Card View */}
+                            <div className="md:hidden space-y-3">
+                                {assignedAgents.map((item) => (
+                                    <div key={item.id} className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-shadow">
+                                        {/* Agent Name and Avatar */}
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <div className="w-10 h-10 rounded-full bg-[#1a3a6b]/10 text-[#1a3a6b] flex items-center justify-center text-sm font-bold">
+                                                {item.agent?.name?.charAt(0)}
+                                            </div>
+                                            <span className="text-md font-semibold text-slate-800 first-letter:uppercase">{item.agent?.name}</span>
+                                        </div>
+
+                                        {/* Divider */}
+                                        <div className="border-t border-slate-200 my-3"></div>
+
+                                        {/* Contact Info */}
+                                        <div className="space-y-2 mb-3">
+                                            <div>
+                                                <p className="text-xs font-semibold text-slate-600">Email</p>
+                                                <p className="text-sm text-slate-900 break-all">{item.agent?.email}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-semibold text-slate-600">Phone</p>
+                                                <p className="text-sm font-semibold text-slate-900">{item.agent?.phone}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Divider */}
+                                        <div className="border-t border-slate-200 my-3"></div>
+
+                                        {/* Action Button */}
+                                        <button
+                                            onClick={() => handleAgentAction(item.agent.id, false)}
+                                            disabled={assignmentLoading === item.agent.id}
+                                            className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 bg-red-700 text-white rounded-lg hover:bg-red-600 transition-all text-sm font-semibold border border-red-100"
+                                        >
+                                            {assignmentLoading === item.agent.id ? (
+                                                <Loader size={14} className="animate-spin" />
+                                            ) : (
+                                                ""
+                                            )}
+                                            Unassign
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
                     )}
                 </div>
 

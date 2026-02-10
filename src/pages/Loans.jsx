@@ -69,7 +69,7 @@ export default function Loans() {
   };
 
   const handleViewLoan = (loanId) => {
-    navigate(`/loan/${loanId}`);
+    navigate(`/loan/${loanId}`);  
   };
 
   const handleApproveLoan = async (loanId, e) => {
@@ -182,7 +182,7 @@ export default function Loans() {
         </div>
       )}
 
-      {/* Loans Table */}
+      {/* Loans Table - Desktop View */}
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <Loader className="animate-spin text-primary-600" size={40} />
@@ -192,87 +192,159 @@ export default function Loans() {
           <p className="text-gray-500 text-lg">No loans found</p>
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead >
-                <tr className="bg-[#1a3a6b] border-b border-gray-200">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                    Loan Number
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                    Principal Amount
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                    Total Payable
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                    Start Date
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                    Remaining
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredLoans.map((loan) => (
-                  <tr key={loan.id} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-gray-900">{loan.loanNumber}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-700">
-                        {loan.principalAmount ? formatCurrency(loan.principalAmount) : '-'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-700">
-                        {loan.totalAmountPayable ? formatCurrency(loan.totalAmountPayable) : '-'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusBadge(
-                          loan.status
-                        )}`}
-                      >
-                        {loan.status.charAt(0).toUpperCase() + loan.status.slice(1)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-gray-700">
-                        {loan.startDate ? formatDate(loan.startDate) : '-'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-gray-900">
-                        {loan.remainingAmount ? formatCurrency(loan.remainingAmount) : '-'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => handleViewLoan(loan.id)}
-                          className="flex items-center gap-2 px-3 py-2 bg-primary-50 text-primary-600 rounded-lg hover:bg-primary-100 transition-colors"
-                        >
-                          {/* <Eye size={16} /> */}
-                          <span className="text-sm font-medium px-2 py-1 border border-[#1a3a6b] rounded-md bg-blue-50 text-[#1a3a6b]">View</span>
-                        </button>
-                        
-                      </div>
-                    </td>
+        <>
+          {/* Desktop Table View */}
+          <div className="hidden md:block bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-[#1a3a6b] border-b border-gray-200">
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                      Loan Number
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                      Principal Amount
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                      Total Payable
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                      Status
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                      Start Date
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                      Remaining
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredLoans.map((loan) => (
+                    <tr key={loan.id} className="border-b border-gray-200 hover:bg-gray-50">
+                      <td className="px-6 py-4">
+                        <span className="text-sm font-medium text-gray-900">{loan.loanNumber}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-gray-700">
+                          {loan.principalAmount ? formatCurrency(loan.principalAmount) : '-'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-gray-700">
+                          {loan.totalAmountPayable ? formatCurrency(loan.totalAmountPayable) : '-'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusBadge(
+                            loan.status
+                          )}`}
+                        >
+                          {loan.status.charAt(0).toUpperCase() + loan.status.slice(1)}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-gray-700">
+                          {loan.startDate ? formatDate(loan.startDate) : '-'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm font-medium text-gray-900">
+                          {loan.remainingAmount ? formatCurrency(loan.remainingAmount) : '-'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleViewLoan(loan.id)}
+                            className="flex items-center gap-2 px-3 py-2 bg-primary-50 text-primary-600 rounded-lg hover:bg-primary-100 transition-colors"
+                          >
+                            <span className="text-sm font-medium px-2 py-1 border border-[#1a3a6b] rounded-md bg-blue-50 text-[#1a3a6b]">View</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-4">
+            {filteredLoans.map((loan) => (
+              <div
+                key={loan.id}
+                onClick={() => handleViewLoan(loan.id)}
+                className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+              >
+                {/* Loan Number and Status */}
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold uppercase tracking-wide">Loan Number</p>
+                    <p className="text-sm font-bold text-gray-900">{loan.loanNumber}</p>
+                  </div>
+                  <span
+                    className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadge(
+                      loan.status
+                    )}`}
+                  >
+                    {loan.status.charAt(0).toUpperCase() + loan.status.slice(1)}
+                  </span>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-200 my-3"></div>
+
+                {/* Amount Info */}
+                <div className="space-y-2 mb-3">
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs text-gray-600 font-semibold">Principal Amount</p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {loan.principalAmount ? formatCurrency(loan.principalAmount) : '-'}
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs text-gray-600 font-semibold">Total Payable</p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {loan.totalAmountPayable ? formatCurrency(loan.totalAmountPayable) : '-'}
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <p className="text-xs text-gray-600 font-semibold">Remaining</p>
+                    <p className="text-sm font-bold text-[#1a3a6b]">
+                      {loan.remainingAmount ? formatCurrency(loan.remainingAmount) : '-'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-200 my-3"></div>
+
+                {/* Date and Action */}
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-gray-600">
+                    <span className="font-semibold">Start Date:</span> {loan.startDate ? formatDate(loan.startDate) : '-'}
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewLoan(loan.id);
+                    }}
+                    className="text-sm font-medium px-3 py-1 border border-[#1a3a6b] rounded-md bg-blue-50 text-[#1a3a6b] hover:bg-blue-100 transition-colors flex items-center gap-1"
+                  >
+                    <Eye size={14} />
+                    View
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

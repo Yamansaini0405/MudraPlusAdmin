@@ -234,11 +234,11 @@ export default function UserDetail() {
     return (
       <div className="space-y-6">
         {/* New Header Section */}
-        <div className="flex items-center justify-between pb-4 border-b border-gray-100">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-4 border-b border-gray-100 gap-3">
           <h3 className="text-lg font-bold text-[#1a3a6b]">User Profile Overview</h3>
           <button
             onClick={handleToggleBlock}
-            className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${userData.isBlocked
+            className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all whitespace-nowrap ${userData.isBlocked
               ? 'bg-green-600 text-green-100 hover:bg-green-500'
               : 'bg-red-600 text-red-100 hover:bg-red-500'
               }`}
@@ -333,23 +333,23 @@ export default function UserDetail() {
           <h3 className="text-lg font-bold text-[#1a3a6b]">Documents</h3>
 
           {userData.kycStatus === "submitted" && (
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-col md:flex-row md:items-center gap-3 w-full">
               <input
                 type="text"
                 placeholder="Reason for rejection..."
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a3a6b] outline-none min-w-[200px]"
+                className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1a3a6b] outline-none w-full md:min-w-[200px]"
               />
               <button
                 onClick={() => handleVerifyKYC('verified')}
-                className="px-4 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-700 transition-colors"
+                className="px-4 py-2 bg-green-600 text-white text-sm font-bold rounded-lg hover:bg-green-700 transition-colors w-full md:w-auto"
               >
                 Verify KYC
               </button>
               <button
                 onClick={() => handleVerifyKYC('rejected')}
-                className="px-4 py-2 bg-white border border-red-600 text-red-600 text-sm font-bold rounded-lg hover:bg-red-50 transition-colors"
+                className="px-4 py-2 bg-white border border-red-600 text-red-600 text-sm font-bold rounded-lg hover:bg-red-50 transition-colors w-full md:w-auto"
               >
                 Reject
               </button>
@@ -407,13 +407,13 @@ export default function UserDetail() {
     return (
       <div className="space-y-4">
         {userData.loans.map((loan) => (
-          <div key={loan.id} className="bg-white p-6 rounded-lg border border-gray-200">
+          <div key={loan.id} className="bg-white p-3 md:p-6 rounded-lg border border-gray-200">
             <div className="bg-gray-200 p-2 rounded-md flex justify-between items-start mb-4">
               <div>
                 <h3 className="font-semibold text-gray-900">{loan.loanNumber}</h3>
                 <p className="text-xs text-gray-600">ID: {loan.id}</p>
               </div>
-              <div className='flex items-center justify-center gap-4'>
+              <div className='flex items-center justify-center gap-2 md:gap-4'>
                 <StatusCard label="" value={loan.status} type={loan.status === 'closed' ? 'success' : loan.status === 'requested' ? 'warning' : 'info'} inline={true} />
                 <button className='border border-[#1a3a6b] text-white text-sm px-2 py-0.5  rounded bg-[#1a3a6b] hover:bg-[#1a3a6b]/95 hover:text-white transition-colors cursor-pointer' onClick={() => navigate(`/loan/${loan.id}`)}>View</button>
               </div>
@@ -512,34 +512,72 @@ export default function UserDetail() {
       return <EmptyState message="No transactions found" />;
     }
     return (
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-[#1a3a6b] border-b border-gray-200">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-white">Amount</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-white">Type</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-white">Loan Number</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-white">Order ID</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-white">Payment ID</th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-white">Date</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {userData.transactions.map((transaction) => (
-              <tr key={transaction.id} className="hover:bg-gray-50">
-                <td className="px-6 py-3 text-sm font-medium text-gray-900">{formatCurrency(transaction.amount)} </td>
-                <td className="px-6 py-3 text-sm">
-                  <StatusCard value={transaction.transactionType} type={transaction.transactionType === 'disbursement' ? 'success' : 'danger'} inline={true} />
-                </td>
-                <td className="px-6 py-3 text-sm text-gray-600">{transaction.loan?.loanNumber || '-'}</td>
-                <td className="px-6 py-3 text-sm text-gray-600 text-xs">{transaction.rpzOrderId || '-'}</td>
-                <td className="px-6 py-3 text-sm text-gray-600 text-xs">{transaction.rpzPaymentId || '-'}</td>
-                <td className="px-6 py-3 text-sm text-gray-600">{formatDate(transaction.createdAt)}</td>
+      <>
+        {/* Desktop Table View */}
+        <div className="hidden md:block bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-[#1a3a6b] border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-white">Amount</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-white">Type</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-white">Loan Number</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-white">Order ID</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-white">Payment ID</th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-white">Date</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {userData.transactions.map((transaction) => (
+                <tr key={transaction.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-3 text-sm font-medium text-gray-900">{formatCurrency(transaction.amount)} </td>
+                  <td className="px-6 py-3 text-sm">
+                    <StatusCard value={transaction.transactionType} type={transaction.transactionType === 'disbursement' ? 'success' : 'danger'} inline={true} />
+                  </td>
+                  <td className="px-6 py-3 text-sm text-gray-600">{transaction.loan?.loanNumber || '-'}</td>
+                  <td className="px-6 py-3 text-sm text-gray-600 text-xs">{transaction.rpzOrderId || '-'}</td>
+                  <td className="px-6 py-3 text-sm text-gray-600 text-xs">{transaction.rpzPaymentId || '-'}</td>
+                  <td className="px-6 py-3 text-sm text-gray-600">{formatDate(transaction.createdAt)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden space-y-3">
+          {userData.transactions.map((transaction) => (
+            <div key={transaction.id} className="bg-white p-4 rounded-lg border border-gray-200">
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-sm font-medium text-gray-900">{formatCurrency(transaction.amount)}</div>
+                <StatusCard value={transaction.transactionType} type={transaction.transactionType === 'disbursement' ? 'success' : 'danger'} inline={true} />
+              </div>
+              <div className="border-t border-gray-200 my-3"></div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="font-semibold text-gray-600">Loan:</span>
+                  <span className="text-gray-900">{transaction.loan?.loanNumber || '-'}</span>
+                </div>
+                {transaction.rpzOrderId && (
+                  <div className="flex justify-between">
+                    <span className="font-semibold text-gray-600">Order ID:</span>
+                    <span className="text-gray-900 text-xs break-all">{transaction.rpzOrderId}</span>
+                  </div>
+                )}
+                {transaction.rpzPaymentId && (
+                  <div className="flex justify-between">
+                    <span className="font-semibold text-gray-600">Payment ID:</span>
+                    <span className="text-gray-900 text-xs break-all">{transaction.rpzPaymentId}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="font-semibold text-gray-600">Date:</span>
+                  <span className="text-gray-900">{formatDate(transaction.createdAt)}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </>
     );
   };
 
@@ -561,61 +599,105 @@ export default function UserDetail() {
               <p className="text-slate-400 text-sm font-medium">No agents assigned to this user.</p>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-[#1a3a6b] border-b border-slate-100" >
-                    <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Agent Info</th>
-                    <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Email</th>
-                    <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Phone</th>
-
-                    <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {userData.agentUsers.map((assignment) => {
-                    const agent = assignment.agent;
-                    return (
-                      <tr key={assignment.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-[#1a3a6b]/10 text-[#1a3a6b] flex items-center justify-center text-xs font-bold uppercase">
-                              {agent?.name?.charAt(0)}
+            <>
+              {/* Desktop Table View */}
+              <div className="hidden md:block bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-[#1a3a6b] border-b border-slate-100" >
+                      <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Agent Info</th>
+                      <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Email</th>
+                      <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest">Phone</th>
+                      <th className="px-6 py-3 text-xs font-semibold uppercase text-white tracking-widest text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {userData.agentUsers.map((assignment) => {
+                      const agent = assignment.agent;
+                      return (
+                        <tr key={assignment.id} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-[#1a3a6b]/10 text-[#1a3a6b] flex items-center justify-center text-xs font-bold uppercase">
+                                {agent?.name?.charAt(0)}
+                              </div>
+                              <span className="text-md font-semibold text-slate-800">{agent?.name}</span>
                             </div>
-                            <span className="text-md font-semibold text-slate-800">{agent?.name}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex flex-col">
-                            <span className="text-sm font-medium text-slate-900">{agent?.email}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex flex-col">
-                            <span className="text-sm font-semibold text-slate-900 uppercase">{agent?.phone}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <button
-                            onClick={() => handleAgentAction(assignment.agent.id, false)}
-                            disabled={assignmentLoading === assignment.agent.id}
-                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-semibold border border-red-100"
-                          >
-                            {assignmentLoading === assignment.agentId ? (
-                              <Loader size={14} className="animate-spin" />
-                            ) : (
-                              // <Trash2 size={14} />
-                              ""
-                            )}
-                            Unassign
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium text-slate-900">{agent?.email}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex flex-col">
+                              <span className="text-sm font-semibold text-slate-900 uppercase">{agent?.phone}</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <button
+                              onClick={() => handleAgentAction(assignment.agent.id, false)}
+                              disabled={assignmentLoading === assignment.agent.id}
+                              className="inline-flex items-center gap-2 px-3 py-1.5 bg-red-700 text-white rounded-lg hover:bg-red-600 hover:text-white transition-all text-sm font-semibold border border-red-100"
+                            >
+                              {assignmentLoading === assignment.agentId ? (
+                                <Loader size={14} className="animate-spin" />
+                              ) : (
+                                ""
+                              )}
+                              Unassign
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="md:hidden space-y-3">
+                {userData.agentUsers.map((assignment) => {
+                  const agent = assignment.agent;
+                  return (
+                    <div key={assignment.id} className="bg-white rounded-lg border border-slate-200 p-4">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-full bg-[#1a3a6b]/10 text-[#1a3a6b] flex items-center justify-center text-sm font-bold">
+                          {agent?.name?.charAt(0)}
+                        </div>
+                        <span className="text-sm font-semibold text-slate-800">{agent?.name}</span>
+                      </div>
+                      <div className="border-t border-slate-200 my-3"></div>
+                      <div className="space-y-2 mb-3">
+                        <div>
+                          <p className="text-xs font-semibold text-slate-600">Email</p>
+                          <p className="text-sm text-slate-900 break-all">{agent?.email}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-slate-600">Phone</p>
+                          <p className="text-sm font-semibold text-slate-900">{agent?.phone}</p>
+                        </div>
+                      </div>
+                      <div className="border-t border-slate-200 my-3"></div>
+                      <button
+                        onClick={() => handleAgentAction(assignment.agent.id, false)}
+                        disabled={assignmentLoading === assignment.agent.id}
+                        className="w-full py-2 bg-red-700 text-white rounded-lg hover:bg-red-600 transition-all text-sm font-semibold border border-red-100"
+                      >
+                        {assignmentLoading === assignment.agentId ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <Loader size={14} className="animate-spin" />
+                            Unassigning...
+                          </span>
+                        ) : (
+                          "Unassign"
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
         </div>
 
@@ -780,57 +862,102 @@ export default function UserDetail() {
     };
 
     return (
-      <div className="flex flex-col gap-1.5">
-        {userData.followUps.map((f) => {
-          const typeKey = f.followUpType?.toLowerCase().replace(/\s/g, '') || 'other';
-          const theme = config[typeKey] || config.other;
-          const Icon = theme.icon;
+      <>
+        {/* Desktop View */}
+        <div className="hidden md:flex md:flex-col md:gap-1.5">
+          {userData.followUps.map((f) => {
+            const typeKey = f.followUpType?.toLowerCase().replace(/\s/g, '') || 'other';
+            const theme = config[typeKey] || config.other;
+            const Icon = theme.icon;
 
-          return (
-            <div key={f.id} className="group flex items-center bg-white border border-slate-200 rounded-lg p-2 hover:border-[#1a3a6b] transition-colors shadow-sm overflow-hidden">
+            return (
+              <div key={f.id} className="group flex items-center bg-white border border-slate-200 rounded-lg p-2 hover:border-[#1a3a6b] transition-colors shadow-sm overflow-hidden">
 
-              {/* 1. TYPE & LOAN ID */}
-              <div className="flex items-center gap-2 min-w-[140px] border-r border-slate-100 pr-3">
-                <div className={`p-1.5 rounded ${theme.bg} ${theme.text}`}>
-                  <Icon size={14} />
+                {/* 1. TYPE & LOAN ID */}
+                <div className="flex items-center gap-2 min-w-[140px] border-r border-slate-100 pr-3">
+                  <div className={`p-1.5 rounded ${theme.bg} ${theme.text}`}>
+                    <Icon size={14} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className={`text-[9px] font-semibold uppercase leading-none ${theme.text}`}>{f.followUpType}</span>
+                    <span className="text-[11px] font-bold text-slate-800">Loan #{f.loanId}</span>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <span className={`text-[9px] font-semibold uppercase leading-none ${theme.text}`}>{f.followUpType}</span>
-                  <span className="text-[11px] font-bold text-slate-800">Loan #{f.loanId}</span>
+
+                {/* 2. NOTE (The longest part, uses flex-1) */}
+                <div className="flex-1 px-4 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase whitespace-nowrap">Note:</span>
+                    <p className="text-[11px] text-slate-600 truncate italic">"{f.note || 'N/A'}"</p>
+                  </div>
                 </div>
+
+                {/* 3. FOLLOW UP DATE */}
+                <div className="px-4 border-l border-slate-100">
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase leading-none">Last Follow-up</span>
+                    <span className="text-[11px] font-semibold text-slate-700 mt-0.5">{formatDateTime(f.followUpDate)}</span>
+                  </div>
+                </div>
+
+                {/* 4. NEXT FOLLOW UP DATE (Highlighted) */}
+                <div className="pl-4 border-l border-slate-100 min-w-[150px]">
+                  <div className="flex flex-col">
+                    <span className={`text-[9px] font-bold uppercase leading-none ${theme.text}`}>Next Schedule</span>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <Clock size={12} className={theme.text} />
+                      <span className="text-[11px] font-semibold text-slate-900">{formatDateTime(f.nextFollowUpDate)}</span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
+            );
+          })}
+        </div>
 
-              {/* 2. NOTE (The longest part, uses flex-1) */}
-              <div className="flex-1 px-4 min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[9px] font-bold text-slate-400 uppercase whitespace-nowrap">Note:</span>
-                  <p className="text-[11px] text-slate-600 truncate italic">"{f.note || 'N/A'}"</p>
+        {/* Mobile View */}
+        <div className="md:hidden space-y-3">
+          {userData.followUps.map((f) => {
+            const typeKey = f.followUpType?.toLowerCase().replace(/\s/g, '') || 'other';
+            const theme = config[typeKey] || config.other;
+            const Icon = theme.icon;
+
+            return (
+              <div key={f.id} className="bg-white rounded-lg border border-slate-200 p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`p-2 rounded ${theme.bg} ${theme.text}`}>
+                    <Icon size={16} />
+                  </div>
+                  <div className="flex-1">
+                    <span className={`text-[9px] font-semibold uppercase leading-none block ${theme.text}`}>{f.followUpType}</span>
+                    <span className="text-[12px] font-bold text-slate-800">Loan #{f.loanId}</span>
+                  </div>
                 </div>
-              </div>
 
-              {/* 3. FOLLOW UP DATE */}
-              <div className="px-4 border-l border-slate-100 hidden md:block">
-                <div className="flex flex-col">
-                  <span className="text-[9px] font-bold text-slate-400 uppercase leading-none">Last Follow-up</span>
-                  <span className="text-[11px] font-semibold text-slate-700 mt-0.5">{formatDateTime(f.followUpDate)}</span>
-                </div>
-              </div>
+                <div className="border-t border-slate-200 my-3"></div>
 
-              {/* 4. NEXT FOLLOW UP DATE (Highlighted) */}
-              <div className="pl-4 border-l border-slate-100 min-w-[150px]">
-                <div className="flex flex-col">
-                  <span className={`text-[9px] font-bold uppercase leading-none ${theme.text}`}>Next Schedule</span>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <Clock size={12} className={theme.text} />
-                    <span className="text-[11px] font-semibold text-slate-900">{formatDateTime(f.nextFollowUpDate)}</span>
+                <div className="space-y-2 mb-3">
+                  <div>
+                    <p className="text-xs font-semibold text-slate-600">Note</p>
+                    <p className="text-sm text-slate-700 italic">"{f.note || 'N/A'}"</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <p className="text-xs font-semibold text-slate-600">Last Follow-up</p>
+                      <p className="text-sm text-slate-900">{formatDateTime(f.followUpDate)}</p>
+                    </div>
+                    <div>
+                      <p className={`text-xs font-semibold ${theme.text}`}>Next Schedule</p>
+                      <p className="text-sm font-semibold text-slate-900">{formatDateTime(f.nextFollowUpDate)}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      </>
     );
   };
 

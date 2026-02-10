@@ -3,6 +3,7 @@
 import { Bell, Search, User, ChevronDown, Settings, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Logo from "../assets/Logo2.png";
 
 export default function Header({ userName = 'Admin User' }) {
   const [showNotifications, setShowNotifications] = useState(false)
@@ -48,64 +49,21 @@ export default function Header({ userName = 'Admin User' }) {
           <h1 className="text-2xl hidden md:block font-bold text-gray-900">Loan Management System</h1>
           <p className="text-sm hidden md:block text-gray-500">Comprehensive finance management platform</p>
         </div>
-        
+        <div className="flex items-center gap-3 md:hidden border-b border-white/10">
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-inner overflow-hidden flex-shrink-0">
+            <img src={Logo} alt="MudraPlus" className="w-8 h-8 object-contain" />
+          </div>
+
+          <div className="animate-in fade-in duration-500">
+            <h1 className="text-lg font-semibold leading-tight tracking-tight">MudraPlus</h1>
+          </div>
+
+        </div>
+
 
         {/* Actions */}
         <div className="flex items-center gap-4">
 
-          {/* Notifications */}
-          <div className="relative">
-            <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2 rounded-lg hover:bg-slate-100 transition"
-            >
-              <Bell className="w-5 h-5 text-slate-600" />
-              {unreadCount > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-[#ff6b35] rounded-full" />
-              )}
-            </button>
-
-            {showNotifications && (
-              <div className="absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden">
-                <div className="px-4 py-3 bg-[#1a3a6b] text-white">
-                  <h3 className="font-semibold text-sm">Notifications</h3>
-                </div>
-
-                <div className="max-h-80 overflow-y-auto">
-                  {notifications.map(notif => (
-                    <div
-                      key={notif.id}
-                      className={`px-4 py-3 border-b border-slate-100 hover:bg-slate-50 transition ${
-                        notif.unread ? 'bg-[#ff6b35]/10' : ''
-                      }`}
-                    >
-                      <div className="flex gap-3">
-                        <span
-                          className={`mt-2 w-2 h-2 rounded-full ${
-                            notif.unread ? 'bg-[#ff6b35]' : 'bg-slate-300'
-                          }`}
-                        />
-                        <div>
-                          <p className="text-sm text-slate-800 font-medium">
-                            {notif.text}
-                          </p>
-                          <p className="text-xs text-slate-500 mt-1">
-                            {notif.time}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="px-4 py-3 bg-slate-50 text-center">
-                  <button className="text-sm font-medium text-[#1a3a6b] hover:text-[#ff6b35] transition">
-                    View all notifications
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
 
           {/* Settings */}
           <button className="p-2 rounded-lg hover:bg-slate-100 transition">
@@ -147,7 +105,7 @@ export default function Header({ userName = 'Admin User' }) {
                 </div>
 
                 <div className="border-t border-slate-200 p-2">
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50 transition">
                     <LogOut size={16} />

@@ -71,15 +71,11 @@ export default function Users() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex gap-4  md:items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Users</h1>
           <p className="text-gray-600 text-sm mt-1">Manage and monitor user accounts</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
-          <Plus size={20} />
-          Add User
-        </button>
       </div>
 
       <div className="relative">
@@ -95,11 +91,12 @@ export default function Users() {
 
       {loading ? (
         <div className="flex justify-center items-center py-12">
-          <Loader className="animate-spin text-primary-600" size={32} />
+          <Loader className="animate-spin text-[#1a3a6b]" size={32} />
         </div>
       ) : filteredUsers.length > 0 ? (
         <>
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+          {/* Desktop Table View */}
+          <div className="hidden md:block bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead className="bg-[#1a3a6b] text-white">
@@ -140,9 +137,77 @@ export default function Users() {
             </div>
           </div>
 
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-3">
+            {filteredUsers.map((user) => (
+              <div
+                key={user.id}
+                onClick={() => navigate(`/user/${user.id}`)}
+                className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+              >
+                {/* Name and KYC Status */}
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold uppercase tracking-wide">Name</p>
+                    <p className="text-sm font-bold text-gray-900">{user.name}</p>
+                  </div>
+                  <span className={`px-2 py-1 text-xs font-semibold rounded ${getKycStatusColor(user.kycStatus)}`}>
+                    {user.kycStatus}
+                  </span>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-200 my-3"></div>
+
+                {/* Contact Info */}
+                <div className="space-y-2 mb-3">
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold">Email</p>
+                    <p className="text-sm text-gray-900 break-all lowercase">{user.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold">Phone</p>
+                    <p className="text-sm font-semibold text-gray-900">{user.phone}</p>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-200 my-3"></div>
+
+                {/* Verification and Joined Date */}
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold">Verification Status</p>
+                    <span className={`inline-block px-2 py-1 text-xs font-semibold rounded mt-1 ${getVerificationStatusColor(user.isVerified)}`}>
+                      {user.isVerified ? 'Verified' : 'Not Verified'}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-gray-600 font-semibold">Joined</p>
+                    <p className="text-sm text-gray-900 mt-1">{formatDate(user.createdAt)}</p>
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-200 my-3"></div>
+
+                {/* View Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/user/${user.id}`);
+                  }}
+                  className="w-full px-3 py-2 rounded-md text-sm font-semibold border border-[#1a3a6b] bg-blue-50 text-[#1a3a6b] hover:bg-blue-100 transition-colors"
+                >
+                  View Details
+                </button>
+              </div>
+            ))}
+          </div>
+
           {/* Pagination Controls */}
-          <div className="flex items-center justify-between mt-4 bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-            <div className="text-sm text-gray-600 font-bold uppercase">
+          <div className="flex items-center justify-between mt-4 bg-white p-3 md:p-4 rounded-lg border border-gray-200 shadow-sm">
+            <div className="text-xs md:text-sm text-gray-600 font-bold uppercase">
               Page {page}
             </div>
             <div className="flex gap-2">
@@ -151,14 +216,14 @@ export default function Users() {
                 onClick={() => setPage(p => p - 1)}
                 className="p-2 border rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={16} className="md:w-5 md:h-5" />
               </button>
               <button
                 disabled={filteredUsers.length < limit}
                 onClick={() => setPage(p => p + 1)}
                 className="p-2 border rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={16} className="md:w-5 md:h-5" />
               </button>
             </div>
           </div>

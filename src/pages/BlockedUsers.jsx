@@ -80,7 +80,8 @@ export default function BlockedUsers() {
         </div>
       ) : filteredUsers.length > 0 ? (
         <>
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm uppercase">
+          {/* Desktop Table View */}
+          <div className="hidden md:block bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm uppercase">
             <table className="w-full text-left font-semibold">
               <thead className="bg-[#1a3a6b] text-white">
                 <tr>
@@ -112,6 +113,37 @@ export default function BlockedUsers() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-3">
+            {filteredUsers.map((user) => (
+              <div key={user.id} className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-gray-900">{user.name}</h3>
+                </div>
+                <div className="border-t border-gray-200 my-3"></div>
+                <div className="space-y-2 mb-3">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-600">Email</p>
+                    <p className="text-sm text-gray-600 lowercase">{user.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-gray-600">Phone</p>
+                    <p className="text-sm text-gray-600">{user.phone}</p>
+                  </div>
+                </div>
+                <div className="border-t border-gray-200 my-3"></div>
+                <button
+                  onClick={() => handleRestore(user.id)}
+                  disabled={actionLoading === user.id}
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-md text-sm border border-emerald-600 bg-emerald-50 text-emerald-700 font-semibold hover:bg-emerald-600 hover:text-white transition-all"
+                >
+                  {actionLoading === user.id ? <Loader size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+                  Restore
+                </button>
+              </div>
+            ))}
           </div>
 
           {/* Pagination Controls */}

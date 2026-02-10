@@ -181,55 +181,110 @@ export default function AdminsList() {
             <p className="text-gray-500 text-lg">No admins or agents found</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-[#1a3a6b] border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-white">Name</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-white">Email</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-white">Phone</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-white">Role</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-white">Created Date</th>
-                  <th className="px-6 py-3 text-center text-sm font-semibold text-white2">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredAdmins.map((admin) => (
-                  <tr key={admin.id} className="hover:bg-gray-50 transition">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{admin.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{admin.email}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{admin.phone}</td>
-                    <td className="px-6 py-4 text-sm">
-                      {getRoleBadge(admin.role)}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {new Date(admin.createdAt).toLocaleDateString('en-IN', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-2">
-                        {actionLoading === admin.id ? (
-                          <Loader size={18} className="text-primary-600 animate-spin" />
-                        ) : (
-                          <Dropdown
-                            items={getActionItems(admin)}
-                            onSelect={(action) => handleAdminAction(admin, action)}
-                          >
-                            <button className="p-2 hover:bg-gray-100 rounded-lg transition">
-                              <span className="text-gray-600 font-bold text-lg">⋮</span>
-                            </button>
-                          </Dropdown>
-                        )}
-                      </div>
-                    </td>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-[#1a3a6b] border-b border-gray-200">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Name</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Email</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Phone</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Role</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-white">Created Date</th>
+                    <th className="px-6 py-3 text-center text-sm font-semibold text-white2">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredAdmins.map((admin) => (
+                    <tr key={admin.id} className="hover:bg-gray-50 transition">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900">{admin.name}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600">{admin.email}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600">{admin.phone}</td>
+                      <td className="px-6 py-4 text-sm">
+                        {getRoleBadge(admin.role)}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-600">
+                        {new Date(admin.createdAt).toLocaleDateString('en-IN', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          {actionLoading === admin.id ? (
+                            <Loader size={18} className="text-primary-600 animate-spin" />
+                          ) : (
+                            <Dropdown
+                              items={getActionItems(admin)}
+                              onSelect={(action) => handleAdminAction(admin, action)}
+                            >
+                              <button className="p-2 hover:bg-gray-100 rounded-lg transition">
+                                <span className="text-gray-600 font-bold text-lg">⋮</span>
+                              </button>
+                            </Dropdown>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden p-4 space-y-3">
+              {filteredAdmins.map((admin) => (
+                <div key={admin.id} className="bg-white rounded-lg border border-gray-200 p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-sm font-semibold text-gray-900">{admin.name}</h3>
+                    {actionLoading === admin.id ? (
+                      <Loader size={16} className="text-primary-600 animate-spin" />
+                    ) : (
+                      <Dropdown
+                        items={getActionItems(admin)}
+                        onSelect={(action) => handleAdminAction(admin, action)}
+                      >
+                        <button className="p-1 hover:bg-gray-100 rounded transition">
+                          <span className="text-gray-600 font-bold">⋮</span>
+                        </button>
+                      </Dropdown>
+                    )}
+                  </div>
+                  <div className="border-t border-gray-200 my-3"></div>
+                  <div className="space-y-2 mb-3">
+                    <div>
+                      <p className="text-xs font-semibold text-gray-600">Email</p>
+                      <p className="text-sm text-gray-600">{admin.email}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-600">Phone</p>
+                      <p className="text-sm text-gray-600">{admin.phone}</p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-semibold text-gray-600">Role</p>
+                        <div className="mt-1">
+                          {getRoleBadge(admin.role)}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs font-semibold text-gray-600">Created</p>
+                        <p className="text-sm text-gray-600">
+                          {new Date(admin.createdAt).toLocaleDateString('en-IN', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 

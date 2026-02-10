@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Plus, Search, Loader, Shield, User, 
+import {
+  Plus, Search, Loader, Shield, User,
   UserPlus, Lock, X, RefreshCw, Trash2, MoreVertical
 } from 'lucide-react';
 import Dropdown from '@/components/ui/Dropdown';
@@ -19,7 +19,7 @@ export default function AdminManagement() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  
+
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', confirmPassword: '', phone: '', role: 'agent',
   });
@@ -40,7 +40,7 @@ export default function AdminManagement() {
       setLoading(true);
       const data = await adminApi.getAllAdmins();
       setAdmins(Array.isArray(data) ? data : []);
-    } catch (err) { setError('Failed to load admins.'); } 
+    } catch (err) { setError('Failed to load admins.'); }
     finally { setLoading(false); }
   };
 
@@ -52,7 +52,7 @@ export default function AdminManagement() {
   const handleCreateAdmin = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) return setError("Passwords don't match");
-    
+
     try {
       setFormLoading(true);
       await adminApi.createAdmin(formData);
@@ -60,14 +60,13 @@ export default function AdminManagement() {
       setShowCreateForm(false);
       setFormData({ name: '', email: '', password: '', confirmPassword: '', phone: '', role: 'agent' });
       fetchAdmins();
-    } catch (err) { setError(err.message); } 
+    } catch (err) { setError(err.message); }
     finally { setFormLoading(false); }
   };
 
   const getRoleBadge = (role) => (
-    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[13px] font-semibold uppercase tracking-wider border ${
-      role === 'admin' ? 'bg-purple-50 text-purple-700 border-purple-100' : 'bg-blue-50 text-blue-700 border-blue-100'
-    }`}>
+    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[13px] font-semibold uppercase tracking-wider border ${role === 'admin' ? 'bg-purple-50 text-purple-700 border-purple-100' : 'bg-blue-50 text-blue-700 border-blue-100'
+      }`}>
       {role === 'admin' ? <Shield size={12} /> : <User size={12} />}
       {role}
     </div>
@@ -97,7 +96,7 @@ export default function AdminManagement() {
             <UserPlus size={18} className="text-white" />
             <h2 className="text-sm font-semibold text-white">Add New System Member</h2>
           </div>
-          
+
           <form onSubmit={handleCreateAdmin} className="p-6 space-y-8">
             {/* Section: Basic Information */}
             <div className="space-y-4">
@@ -170,56 +169,99 @@ export default function AdminManagement() {
       {loading ? (
         <div className="flex justify-center py-12"><Loader className="animate-spin text-[#1a3a6b]" size={32} /></div>
       ) : filteredAdmins.length > 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-[#1a3a6b] border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide">Member Name</th>
-                  <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide text-center">Phone</th>
-                  <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide">Email</th>
-                  <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide">Role</th>
-                  <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide">Joined Date</th>
-                  
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredAdmins.map((admin) => (
-                  <tr key={admin.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#1a3a6b]/10 flex items-center justify-center text-[#1a3a6b] font-black text-xs uppercase">
-                          {admin.name.charAt(0)}
-                        </div>
-                        <span className="text-sm font-semibold text-gray-900">{admin.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                     <span className="text-[13px] font-semibold text-gray-900 uppercase tracking-tighter">{admin.phone}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="text-xs text-gray-600">{admin.email}</span>
-                        
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 font-semibold">{getRoleBadge(admin.role)}</td>
-                    <td className="px-6 py-4 text-xs text-gray-500 font-semibold">
-                      {new Date(admin.createdAt).toLocaleDateString('en-IN', {
-                        day: 'numeric', month: 'short', year: 'numeric'
-                      })}
-                    </td>
-                    
+        <>
+          {/* Desktop Table View */}
+          <div className="hidden md:block bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-[#1a3a6b] border-b border-gray-200">
+                  <tr>
+                    <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide">Member Name</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide text-center">Phone</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide">Email</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide">Role</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-white uppercase tracking-wide">Joined Date</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredAdmins.map((admin) => (
+                    <tr key={admin.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-[#1a3a6b]/10 flex items-center justify-center text-[#1a3a6b] font-black text-xs uppercase">
+                            {admin.name.charAt(0)}
+                          </div>
+                          <span className="text-sm font-semibold text-gray-900">{admin.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <span className="text-[13px] font-semibold text-gray-900 uppercase tracking-tighter">{admin.phone}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                          <span className="text-xs text-gray-600">{admin.email}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 font-semibold">{getRoleBadge(admin.role)}</td>
+                      <td className="px-6 py-4 text-xs text-gray-500 font-semibold">
+                        {new Date(admin.createdAt).toLocaleDateString('en-IN', {
+                          day: 'numeric', month: 'short', year: 'numeric'
+                        })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden space-y-3">
+            {filteredAdmins.map((admin) => (
+              <div key={admin.id} className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-[#1a3a6b]/10 flex items-center justify-center text-[#1a3a6b] font-black text-sm uppercase">
+                    {admin.name.charAt(0)}
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-900">{admin.name}</h3>
+                </div>
+                <div className="border-t border-gray-200 my-3"></div>
+                <div className="space-y-2 mb-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold text-gray-600">Phone</p>
+                      <p className="text-sm text-gray-900 font-semibold uppercase">{admin.phone}</p>
+                    </div>
+                    <div>
+                      <p className="text- text-sm font-semibold text-gray-600">Role</p>
+                      <div className="mt-1">
+                        {getRoleBadge(admin.role)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold text-gray-600">Email</p>
+                      <p className="text-sm text-gray-600">{admin.email}</p>
+                    </div>
+                    <div className="px-3 py-1 bg-gray-100 rounded-md text-">
+                      <p className="text-xs font-semibold text-gray-600">Joined</p>
+                      <p className="text-sm text-gray-600">
+                        {new Date(admin.createdAt).toLocaleDateString('en-IN', {
+                          day: 'numeric', month: 'short', year: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       ) : (
         <div className="flex flex-col items-center justify-center bg-white rounded-lg border border-dashed border-gray-300 p-20 shadow-sm text-center">
           <div className="bg-gray-50 p-4 rounded-full mb-4">
-             <User size={40} className="text-gray-200" />
+            <User size={40} className="text-gray-200" />
           </div>
           <h3 className="text-xl font-semibold text-gray-900 uppercase">No Members Found</h3>
           <p className="text-gray-500 mt-1">Try adjusting your search criteria.</p>

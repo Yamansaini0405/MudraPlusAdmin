@@ -67,12 +67,12 @@ export default function Sidebar() {
       allowedRoles: ['admin']
     },
     
-    {
-      label: 'Settings',
-      icon: Settings,
-      path: '/settings',
-      allowedRoles: ['admin', 'agent']
-    },
+    // {
+    //   label: 'Settings',
+    //   icon: Settings,
+    //   path: '/settings',
+    //   allowedRoles: ['admin', 'agent']
+    // },
   ];
 
   // Helper to check if a path or its sub-paths are active
