@@ -133,6 +133,25 @@ export const adminApi = {
       throw error;
     }
   },
+
+  // Get dashboard stats
+  getStats: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/admin/stats`, {
+        method: 'GET',
+        headers: getHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch stats: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+      throw error;
+    }
+  },
 };
 
 
