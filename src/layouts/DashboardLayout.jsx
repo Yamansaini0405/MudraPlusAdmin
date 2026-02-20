@@ -38,8 +38,8 @@ export default function DashboardLayout() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/" element={<Dashboard />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/users/blocked" element={<BlockedUsers />} />
-              <Route path="/users/kyc" element={<KYCUsers />} />
+              <Route path="/users-blocked" element={<BlockedUsers />} />
+              <Route path="/users-kyc" element={<KYCUsers />} />
               <Route path="/user/:userId" element={<UserDetail />} />
               <Route path="/admins" element={<AdminManagement />} />
               {/* <Route path="/admins/create" element={<CreateAdmin />} /> */}
