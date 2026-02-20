@@ -83,37 +83,9 @@ export default function Header({ userName = 'Admin User' }) {
                 <p className="text-sm font-semibold text-slate-800">{userName}</p>
                 <p className="text-xs text-slate-500">{localStorage.getItem('role').toUpperCase()}</p>
               </div>
-              <ChevronDown className="w-4 h-4 text-slate-600" />
             </div>
 
-            {showProfile && (
-              <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden">
-                <div className="px-4 py-4 bg-[#1a3a6b] text-white">
-                  <p className="font-semibold">{userName}</p>
-                  <p className="text-sm opacity-80">admin@mudraplus.com</p>
-                </div>
-
-                <div className="p-2 space-y-1">
-                  <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-100 transition">
-                    <User size={16} />
-                    Profile Settings
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-100 transition">
-                    <Settings size={16} />
-                    Account Settings
-                  </button>
-                </div>
-
-                <div className="border-t border-slate-200 p-2">
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50 transition">
-                    <LogOut size={16} />
-                    Logout
-                  </button>
-                </div>
-              </div>
-            )}
+            
           </div>
 
         </div>
