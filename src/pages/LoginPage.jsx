@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import Logo from "../assets/Logo2.png"
 import { useNavigate } from 'react-router-dom';
+import { isTokenValid } from '../utils/auth';
 
 export default function LoginPage({ setIsAuthenticated }) {
 
@@ -18,6 +19,14 @@ export default function LoginPage({ setIsAuthenticated }) {
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate();
+
+  // Check if user already has a valid token - redirect to dashboard
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token && isTokenValid(token)) {
+      navigate('/admin/dashboard', { replace: true })
+    }
+  }, [navigate])
 
 const handleLogin = async (e) => {
   e.preventDefault()
